@@ -23,10 +23,7 @@ node {
         checkout scm
     }
 
-    
-	withCredentials([gitUsernamePassword(credentialsId: 'ed705c59-f641-45dc-96ef-ea7bdf85007f', gitToolName: 'Default')]) {
-    // some block
-}
+   
 	withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
             if (isUnix()) {
