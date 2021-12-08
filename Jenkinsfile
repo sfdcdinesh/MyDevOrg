@@ -18,12 +18,14 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
 
-    stage('checkout source') {
+    //stage('checkout source') {
         // when running in multi-branch job, one must issue this command
-        checkout scm
-    }
+      // checkout scm
+   // }
 
-   
+   withCredentials([gitUsernamePassword(credentialsId: 'ed705c59-f641-45dc-96ef-ea7bdf85007f', gitToolName: 'Git')]) {
+    // some block
+}
 	withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
             if (isUnix()) {
