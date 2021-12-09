@@ -18,7 +18,7 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
 
-        SFDX_HOME                      = "C:\Program Files\sfdx\bin"
+        SFDX_HOME                      = "\sfdx\bin"
         SFDX_USE_GENERIC_UNIX_KEYCHAIN = true
         HUB_ORG                        = "dinesh.ghattamaneni@gmail.com.trainingorg"
         SFDC_HOST                      = "https://login.salesforce.com"
@@ -31,7 +31,9 @@ node {
                 checkout scm
             }
         }
-
+}
+}
+}
         stage("Run build") {
             steps {
                 withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: "JWT_KEY_FILE")]) {
