@@ -17,23 +17,13 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
-
-        SFDX_HOME                      = "\sfdx\bin"
-        SFDX_USE_GENERIC_UNIX_KEYCHAIN = true
-        HUB_ORG                        = "dinesh.ghattamaneni@gmail.com.trainingorg"
-        SFDC_HOST                      = "https://login.salesforce.com"
-        JWT_KEY_CRED_ID                = "1c6f302f-7137-45b2-a14e-209e5791fbbb"
-        JWT_KEY_FILE                   = "server.key"
-        CONNECTED_APP_CONSUMER_KEY     = "3MVG9fe4g9fhX0E5ghqkkG3foTU5nG1QX.yWFy7kIio87StdbX6cc72Pyo2dlM2sqYAJ5XcpoPcDNB2.Yz4q."
-    }
+}
         stage("Checkout source") {
             steps {
                 checkout scm
             }
         }
-}
-}
-}
+
         stage("Run build") {
             steps {
                 withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: "JWT_KEY_FILE")]) {
@@ -47,3 +37,8 @@ node {
                         } else {
                             echo "Successfully authorized to DEV HUB ${HUB_ORG}"
                         }
+                    }
+                }
+            }
+        }
+
