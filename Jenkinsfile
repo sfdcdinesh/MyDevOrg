@@ -18,32 +18,30 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
 
-    stage('checkout source') {
-        // when running in multi-branch job, one must issue this command
-        checkout scm
+        SFDX_HOME                      = "C:\Program Files\sfdx\bin"
+        SFDX_USE_GENERIC_UNIX_KEYCHAIN = true
+        HUB_ORG                        = "dinesh.ghattamaneni@gmail.com.trainingorg"
+        SFDC_HOST                      = "https://login.salesforce.com"
+        JWT_KEY_CRED_ID                = "1c6f302f-7137-45b2-a14e-209e5791fbbb"
+        JWT_KEY_FILE                   = "server.key"
+        CONNECTED_APP_CONSUMER_KEY     = "3MVG9fe4g9fhX0E5ghqkkG3foTU5nG1QX.yWFy7kIio87StdbX6cc72Pyo2dlM2sqYAJ5XcpoPcDNB2.Yz4q."
     }
-
-    withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
-        stage('Deploye Code') {
-            if (isUnix()) {
-                rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-            }else{
-                 rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+        stage("Checkout source") {
+            steps {
+                checkout scm
             }
-            if (rc != 0) { error 'hub org authorization failed' }
-
-			println rc
-			
-			// need to pull out assigned username
-			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
-			}else{
-			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
-			}
-			  
-            printf rmsg
-            println('Hello from a Job DSL script!')
-            println(rmsg)
         }
-    }
-}
+
+        stage("Run build") {
+            steps {
+                withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: "JWT_KEY_FILE")]) {
+
+                    script {
+                        echo "on branch name: ${BRANCH}"
+                        echo "1. DEV HUB auth"
+                        def authStatus = sh returnStatus: true, script: "${SFDX_HOME}/sfdx force:auth:jwt:grant -i ${CONNECTED_APP_CONSUMER_KEY} -u ${HUB_ORG} -f ${JWT_KEY_FILE} -s -r ${SFDC_HOST} --json --loglevel debug"
+                        if (authStatus != 0) {
+                            error "DEV HUB authorization failed"
+                        } else {
+                            echo "Successfully authorized to DEV HUB ${HUB_ORG}"
+                        }
