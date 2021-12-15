@@ -34,12 +34,12 @@ node {
                  rc = bat returnStatus: true, script: "${toolbelt} auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --loglevel DEBUG --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }
 		
-            //if (rc != 0) { 
-		    //println 'inside rc 0'
-		   // error 'hub org authorization failed' 
+            if (rc != 1) { 
+		    println 'inside rc 1'
+		   error 'hub org authorization failed' 
 	    }
 		//else{
-			//println 'rc not 0'
+			println 'rc not 1'
 		}
 
 			println rc
