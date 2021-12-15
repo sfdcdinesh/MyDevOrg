@@ -30,16 +30,16 @@ node {
             }else{
 		    //bat "${toolbelt} plugins:install salesforcedx@49.5.0"
 		    //bat "${toolbelt} update"
-		    bat "${toolbelt} auth:logout -u ${HUB_ORG} -p" 
+		    //bat "${toolbelt} auth:logout -u ${HUB_ORG} -p" 
                  rc = bat returnStatus: true, script: "${toolbelt} auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --loglevel DEBUG --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }
 		
-            if (rc != 0) { 
-		    println 'inside rc 0'
-		    error 'hub org authorization failed' 
+            //if (rc != 0) { 
+		    //println 'inside rc 0'
+		   // error 'hub org authorization failed' 
 	    }
-		else{
-			println 'rc not 0'
+		//else{
+			//println 'rc not 0'
 		}
 
 			println rc
@@ -47,10 +47,10 @@ node {
 			need to pull out assigned username
 			if (isUnix()) {
 				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
-				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy -x manifest/package.xml -u ${HUB_ORG}"
+				//rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy -x manifest/package.xml -u ${HUB_ORG}"
 			}else{
 			rmsg = bat returnStdout: true, script: "${toolbelt} force:source:deploy -x manifest/package.xml -u ${HUB_ORG}"
-			   rmsg = bat returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
+			   //rmsg = bat returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
 			}
 			  
             printf rmsg
